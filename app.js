@@ -305,6 +305,7 @@ function checkConnectionStatus() {
     statusIndicator.innerHTML = '<span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span><span class="text-[10px] text-amber-700 font-bold ml-1.5 uppercase tracking-wide">' + (currentLanguage === 'es' ? 'Offline' : 'Offline') + '</span>';
   }
   updateLimiBadge();
+  updateMapVisibility(); // Sincronizar visibilidad de Google Maps automáticamente
 }
 
 function handleOnline() {
@@ -366,6 +367,7 @@ async function loadData() {
   renderAttractions();
   renderServices();
   renderProducts();
+  updateMapVisibility(); // Sincronizar mapa de Google al inicio
 }
 
 // Renderizar Atractivos
@@ -398,12 +400,44 @@ function renderAttractions() {
   `).join('');
 }
 
-// Detalle del mapa rústico
+// Conmutar visibilidad y cargar Google Maps Iframe dinámico sin API keys costosas
+window.updateMapVisibility = function() {
+  const onlineMap = document.getElementById('online-map-container');
+  const offlineMap = document.getElementById('offline-map-container');
+  const iframe = document.getElementById('google-maps-iframe');
+  
+  if (!onlineMap || !offlineMap) return;
+  
+  if (navigator.onLine) {
+    onlineMap.classList.remove('hidden');
+    offlineMap.classList.add('hidden');
+    
+    // Si el iframe está vacío, cargar mapa base por defecto de Coina
+    if (!iframe.src || iframe.src === window.location.href) {
+      iframe.src = "https://maps.google.com/maps?q=Coina,%20Otuzco,%20Peru&t=&z=14&ie=UTF8&iwloc=&output=embed";
+    }
+  } else {
+    onlineMap.classList.add('hidden');
+    offlineMap.classList.remove('hidden');
+  }
+}
+
+// Cargar la atracción específica en el iframe si está en línea, o dar el fallback descriptivo offline
 window.showRouteDetails = function(id) {
   const items = localDatabase[currentLanguage]?.attractions || [];
   const att = items.find(a => a.id === id);
   if (att) {
-    showToast(`${att.name}: ${att.accessibility}`);
+    if (navigator.onLine) {
+      const iframe = document.getElementById('google-maps-iframe');
+      if (iframe) {
+        // Generar URL de búsqueda de Google Maps Embed
+        const searchQuery = encodeURIComponent(`${att.name}, Coina, Otuzco, Peru`);
+        iframe.src = `https://maps.google.com/maps?q=${searchQuery}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+        showToast(currentLanguage === 'es' ? `Cargando mapa en vivo de ${att.name}...` : `Loading live map of ${att.name}...`);
+      }
+    } else {
+      showToast(`${att.name}: ${att.accessibility}`);
+    }
   }
 }
 
