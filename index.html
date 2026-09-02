@@ -153,10 +153,17 @@
         <p class="text-xs text-gray-500" data-i18n="explora_subtitle">Descubre los atractivos naturales y deportivos de la campiña</p>
       </div>
 
-      <!-- MAPA VECTORIAL SVG SIMULADO INTERACTIVO (100% OFFLINE) -->
+      <!-- MAPA CONMUTABLE HÍBRIDO (GOOGLE MAPS EN VIVO ONLINE / SVG OFFLINE) -->
       <div class="bg-white border border-gray-100 rounded-3xl p-4 shadow-sm">
         <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-2" data-i18n="map_label">Mapa Interactivo de Rutas (Offline)</p>
-        <div class="bg-emerald-50 rounded-2xl h-48 relative border border-emerald-100/50 overflow-hidden flex items-center justify-center">
+        
+        <!-- Contenedor del Mapa en Vivo (Google Maps Iframe - Solo Online) -->
+        <div id="online-map-container" class="hidden w-full h-48 rounded-2xl overflow-hidden border border-gray-100/50 mb-3">
+          <iframe id="google-maps-iframe" class="w-full h-full border-0" src="" allowfullscreen loading="lazy" title="Google Maps Coina"></iframe>
+        </div>
+
+        <!-- Contenedor del Mapa Local (SVG - 100% Offline Fallback) -->
+        <div id="offline-map-container" class="bg-emerald-50 rounded-2xl h-48 relative border border-emerald-100/50 overflow-hidden flex items-center justify-center">
           <div class="absolute inset-0 opacity-25 bg-[radial-gradient(#059669_1px,transparent_1px)] [background-size:16px_16px]"></div>
           <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <path d="M 0 100 Q 150 160, 300 80 T 600 120" fill="none" stroke="#2563EB" stroke-width="6" stroke-linecap="round" />
