@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#047857">
+  <title>Coina: Saborea y Vive | Web App Turística Bilingüe</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            // Paleta de Accesibilidad WCAG 2.1 (AA) de Alto Contraste
+            emerald: {
+              50: '#ECFDF5',
+              100: '#D1FAE5',
+              200: '#A7F3D0',
+              600: '#059669',
+              700: '#047857', // Contraste óptimo (cumple AA)
+              800: '#065F46'
+            },
+            amber: {
+              50: '#FFFBEB',
+              500: '#D97706',
+              700: '#B45309'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+            display: ['Montserrat', 'system-ui']
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Enlace al manifiesto de instalación PWA -->
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" href="https://img.icons8.com/color/48/citrus.png">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Asegurar que el focus-visible cumpla con WCAG 2.1 */
+    *:focus-visible {
+      outline: 3px solid #047857;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 h-full flex flex-col font-sans select-none antialiased">
+
+  <!-- CABECERA DE APLICACIÓN BILINGÜE CON CONTROL DE IDIOMA Y ESTADO DE CONEXIÓN -->
+  <header class="bg-white border-b border-gray-100 py-3 px-4 sticky top-0 z-40 shadow-sm flex items-center justify-between" role="banner">
+    <div class="flex items-center gap-2">
+      <span class="text-2xl" aria-hidden="true">🍋</span>
+      <div>
+        <h1 class="font-display font-extrabold text-gray-800 text-sm tracking-tight" data-i18n="app_title">COINA: SABOREA Y VIVE</h1>
+        <p class="text-[9px] text-gray-400 font-semibold tracking-wider uppercase" data-i18n="app_subtitle">Paraíso del Alto Chicama</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <!-- Selector de Idioma Accesible (ES / EN Toggle) -->
+      <div class="flex bg-gray-100 p-0.5 rounded-lg border border-gray-200" role="group" aria-label="Language Selector">
+        <button id="btn-lang-es" onclick="setLanguage('es')" class="text-[10px] font-bold px-2 py-1 rounded transition bg-emerald-700 text-white" aria-label="Cambiar a Español">ES</button>
+        <button id="btn-lang-en" onclick="setLanguage('en')" class="text-[10px] font-bold px-2 py-1 rounded transition text-gray-600" aria-label="Switch to English">EN</button>
+      </div>
+
+      <!-- Indicador de conexión dinámico -->
+      <div id="conn-status" class="flex items-center" aria-live="polite">
+        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-gray-400"></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL (MULTIPLE PANELES / SPA) -->
+  <main class="flex-1 overflow-y-auto pb-24" role="main">
+    
+    <!-- PANTALLA 1: INICIO (HOME) -->
+    <section id="inicio" class="app-screen p-4 space-y-4">
+      
+      <!-- BANNER DE BIENVENIDA -->
+      <div class="bg-gradient-to-br from-emerald-700 to-emerald-800 rounded-3xl p-6 text-white shadow-md relative overflow-hidden">
+        <div class="relative z-10">
+          <span class="bg-emerald-600/50 text-[10px] font-bold px-3 py-1 rounded-full border border-emerald-500/30 uppercase tracking-wide" data-i18n="hero_badge">Clima de Sanatorio Natural</span>
+          <h2 class="font-display font-extrabold text-2xl mt-3 mb-2 leading-tight" data-i18n="hero_title">¡Respira de nuevo en Coina!</h2>
+          <p class="text-xs text-emerald-100 leading-relaxed font-medium" data-i18n="hero_desc">Bautizado como el 'Paraíso del Alto Chicama', un refugio de aire puro, clima seco y sol andino, ideal para la salud y el ecoturismo familiar a 1,942 msnm.</p>
+        </div>
+        <div class="absolute -right-10 -bottom-10 text-[130px] opacity-15 pointer-events-none select-none">🍋</div>
+      </div>
+
+      <!-- TARJETA CLIMATOLÓGICA INTERACTIVA -->
+      <div class="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm flex items-center justify-between">
+        <div class="space-y-1">
+          <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider" data-i18n="temp_label">Temperatura Promedio</p>
+          <p class="text-3xl font-display font-black text-gray-800">19°C <span class="text-emerald-700 text-lg font-bold">☀️</span></p>
+          <p class="text-xs text-gray-600" data-i18n="temp_desc">Humedad muy baja - Clima Seco Terapéutico</p>
+        </div>
+        <div class="bg-emerald-50 p-3 rounded-2xl text-center">
+          <span class="text-xs font-bold text-emerald-800 block" data-i18n="benefit_title">Beneficio</span>
+          <span class="text-[10px] text-emerald-600 font-bold" data-i18n="benefit_desc">Salud Respiratoria</span>
+        </div>
+      </div>
+
+      <!-- MANUAL DEL VIAJERO SIN ESTRÉS -->
+      <div class="space-y-3">
+        <h3 class="font-display font-bold text-gray-800 text-sm tracking-tight flex items-center gap-1.5">
+          <span>🎯</span> <span data-i18n="manual_title">Manual del Viajero "Sin Estrés"</span>
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <!-- Cómo llegar -->
+          <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex gap-3">
+            <span class="text-2xl" aria-hidden="true">🚌</span>
+            <div class="space-y-1">
+              <h4 class="font-bold text-gray-800 text-xs" data-i18n="transport_card_title">¿Cómo Llegar?</h4>
+              <p class="text-[11px] text-gray-600 leading-relaxed" data-i18n="transport_card_desc">Desde Trujillo (145 km, 4h) vía Latino o Huaca Express. O desde Otuzco (61 km, 2.5h) con la combi del Sr. Ponce los Lun/Mié/Vie a las 11:00 AM.</p>
+            </div>
+          </div>
+
+          <!-- Clima y Equipaje -->
+          <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm flex gap-3">
+            <span class="text-2xl" aria-hidden="true">🧥</span>
+            <div class="space-y-1">
+              <h4 class="font-bold text-gray-800 text-xs" data-i18n="luggage_card_title">Clima y Equipaje</h4>
+              <p class="text-[11px] text-gray-600 leading-relaxed" data-i18n="luggage_card_desc">¡Viste en capas! Durante el día hace sol y calor andino, pero de noche refresca mucho. No olvides bloqueador solar y casaca cortavientos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOUVENIR Y CAPTURA RÁPIDA -->
+      <div class="bg-emerald-50 border border-emerald-100 rounded-3xl p-4 flex gap-3 items-center">
+        <span class="text-3xl" aria-hidden="true">🔬</span>
+        <div>
+          <h4 class="font-bold text-emerald-900 text-xs" data-i18n="legacy_title">El Legado de Salud del Dr. Kauffman</h4>
+          <p class="text-[11px] text-emerald-700 leading-relaxed" data-i18n="legacy_desc">En la década de 1950, el médico alemán Dr. Oswaldo Kauffman Reinars impulsó el Hospital Andino de Coina, maravillado por el microclima curativo del valle.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANTALLA 2: EXPLORA (RUTAS Y ATRACTIVOS) -->
+    <section id="explora" class="app-screen p-4 space-y-4 hidden">
+      <div class="space-y-1">
+        <h2 class="font-display font-extrabold text-lg text-gray-800" data-i18n="explora_title">Rutas y Rincones de Coina</h2>
+        <p class="text-xs text-gray-500" data-i18n="explora_subtitle">Descubre los atractivos naturales y deportivos de la campiña</p>
+      </div>
+
+      <!-- MAPA VECTORIAL SVG SIMULADO INTERACTIVO (100% OFFLINE) -->
+      <div class="bg-white border border-gray-100 rounded-3xl p-4 shadow-sm">
+        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-2" data-i18n="map_label">Mapa Interactivo de Rutas (Offline)</p>
+        <div class="bg-emerald-50 rounded-2xl h-48 relative border border-emerald-100/50 overflow-hidden flex items-center justify-center">
+          <div class="absolute inset-0 opacity-25 bg-[radial-gradient(#059669_1px,transparent_1px)] [background-size:16px_16px]"></div>
+          <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 0 100 Q 150 160, 300 80 T 600 120" fill="none" stroke="#2563EB" stroke-width="6" stroke-linecap="round" />
+          </svg>
+          
+          <button onclick="showRouteDetails('att_01')" class="absolute top-1/4 left-1/4 bg-white hover:bg-emerald-50 border border-emerald-600 rounded-full px-2.5 py-1 text-[10px] font-bold shadow-md flex items-center gap-1 focus:ring-2 focus:ring-emerald-500" style="transform: translate(-50%, -50%);">
+            ⛰️ <span data-i18n="pin_machu">Machu Picchu</span>
+          </button>
+          
+          <button onclick="showRouteDetails('att_02')" class="absolute top-1/2 left-2/3 bg-white hover:bg-emerald-50 border border-emerald-600 rounded-full px-2.5 py-1 text-[10px] font-bold shadow-md flex items-center gap-1 focus:ring-2 focus:ring-emerald-500" style="transform: translate(-50%, -50%);">
+            🔭 <span data-i18n="pin_mirador">Mirador</span>
+          </button>
+
+          <button onclick="showRouteDetails('att_03')" class="absolute bottom-1/4 left-1/2 bg-white hover:bg-emerald-50 border border-emerald-600 rounded-full px-2.5 py-1 text-[10px] font-bold shadow-md flex items-center gap-1 focus:ring-2 focus:ring-emerald-500" style="transform: translate(-50%, -50%);">
+            🏞️ <span data-i18n="pin_rio">Río Chicama</span>
+          </button>
+
+          <button onclick="showRouteDetails('att_04')" class="absolute bottom-1/3 left-1/4 bg-white hover:bg-emerald-50 border border-emerald-600 rounded-full px-2.5 py-1 text-[10px] font-bold shadow-md flex items-center gap-1 focus:ring-2 focus:ring-emerald-500" style="transform: translate(-50%, -50%);">
+            🏟️ <span data-i18n="pin_estadio">Estadio Techado</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Contenedor dinámico de atractivos -->
+      <div id="attractions-container" class="space-y-4"></div>
+    </section>
+
+    <!-- PANTALLA 3: SERVICIOS (DORMIR, COMER Y VIAJAR) -->
+    <section id="servicios" class="app-screen p-4 space-y-4 hidden">
+      <div class="space-y-1">
+        <h2 class="font-display font-extrabold text-lg text-gray-800" data-i18n="services_title">Servicios Locales y Reservas</h2>
+        <p class="text-xs text-gray-500" data-i18n="services_subtitle">Conecta directamente con hospedajes, restaurantes y choferes de confianza</p>
+      </div>
+
+      <!-- Sub-navegación local de Servicios -->
+      <div class="flex gap-2 border-b border-gray-100 pb-2 overflow-x-auto">
+        <button id="btn-sub-hosp" onclick="switchSubService('hosp')" class="bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition" data-i18n="sub_hosp">🛌 Alojamientos</button>
+        <button id="btn-sub-rest" onclick="switchSubService('rest')" class="bg-white border border-gray-100 text-gray-600 text-xs font-bold px-4 py-2 rounded-xl transition" data-i18n="sub_rest">🍲 Restaurantes</button>
+      </div>
+
+      <!-- Contenedores dinámicos de servicios -->
+      <div id="services-container" class="space-y-4"></div>
+    </section>
+
+    <!-- PANTALLA 4: TIENDA (MARKETPLACE DE LIMA DULCE) -->
+    <section id="mercado" class="app-screen p-4 space-y-4 hidden">
+      <div class="bg-gradient-to-r from-emerald-800 to-emerald-950 rounded-3xl p-5 text-white shadow-md relative overflow-hidden">
+        <div class="relative z-10 space-y-1">
+          <span class="bg-amber-500 text-gray-900 text-[8px] font-black px-2 py-0.5 rounded uppercase tracking-wider" data-i18n="store_badge">Capital de la Lima Dulce</span>
+          <h2 class="font-display font-extrabold text-xl leading-tight" data-i18n="store_title">El Mercado de Coina</h2>
+          <p class="text-xs text-emerald-100/90 leading-relaxed font-medium" data-i18n="store_desc">Compra de forma directa limas de aroma único, ricas en vitamina C y producidas de forma 100% natural y libre de pesticidas.</p>
+        </div>
+        <div class="absolute -right-6 -bottom-6 text-[90px] opacity-10 pointer-events-none select-none">🍋</div>
+      </div>
+
+      <!-- Carrito de Compras en Memoria -->
+      <div id="cart-preview" class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm flex items-center justify-between hidden">
+        <div class="flex items-center gap-2.5">
+          <span class="text-xl" aria-hidden="true">🛒</span>
+          <div>
+            <p class="font-bold text-xs text-gray-800" data-i18n="cart_title">Mi Carrito de Compras</p>
+            <p id="cart-details" class="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">0 Items - S/ 0.00</p>
+          </div>
+        </div>
+        <button onclick="checkout()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs py-2 px-4 rounded-xl shadow transition focus:ring-2 focus:ring-emerald-500 focus:outline-none" data-i18n="btn_checkout">
+          Comprar
+        </button>
+      </div>
+
+      <!-- Catálogo de Productos -->
+      <div id="products-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- PANTALLA 5: CULTURA, MITOS Y FESTIVALES (LEYENDAS) -->
+    <section id="cultura" class="app-screen p-4 space-y-4 hidden">
+      <div class="space-y-1">
+        <h2 class="font-display font-extrabold text-lg text-gray-800" data-i18n="culture_title">Tradiciones y Leyendas</h2>
+        <p class="text-xs text-gray-500" data-i18n="culture_subtitle">Adéntrate en la mística y la historia oral del valle de Coina</p>
+      </div>
+
+      <div class="space-y-3">
+        <details class="bg-white border border-gray-100 rounded-2xl p-4 group shadow-sm [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer focus:outline-none">
+            <h3 class="font-bold text-sm text-gray-800 flex items-center gap-2">
+              <span>🐦</span> <span data-i18n="myth1_title">Las Aves de La Fundición</span>
+            </h3>
+            <span class="text-xs text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <p class="text-xs text-gray-600 mt-3 leading-relaxed border-t border-gray-50 pt-3" data-i18n="myth1_desc"></p>
+        </details>
+
+        <details class="bg-white border border-gray-100 rounded-2xl p-4 group shadow-sm [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer focus:outline-none">
+            <h3 class="font-bold text-sm text-gray-800 flex items-center gap-2">
+              <span>🌊</span> <span data-i18n="myth2_title">La Laguna Encantadora de Inea</span>
+            </h3>
+            <span class="text-xs text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <p class="text-xs text-gray-600 mt-3 leading-relaxed border-t border-gray-50 pt-3" data-i18n="myth2_desc"></p>
+        </details>
+
+        <details class="bg-white border border-gray-100 rounded-2xl p-4 group shadow-sm [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer focus:outline-none">
+            <h3 class="font-bold text-sm text-gray-800 flex items-center gap-2">
+              <span>🐐</span> <span data-i18n="myth3_title">El Niño Fantasma del Río Chugual</span>
+            </h3>
+            <span class="text-xs text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <p class="text-xs text-gray-600 mt-3 leading-relaxed border-t border-gray-50 pt-3" data-i18n="myth3_desc"></p>
+        </details>
+
+        <details class="bg-white border border-gray-100 rounded-2xl p-4 group shadow-sm [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer focus:outline-none">
+            <h3 class="font-bold text-sm text-gray-800 flex items-center gap-2">
+              <span>🇵🇹</span> <span data-i18n="myth4_title">Origen del Nombre "Coina"</span>
+            </h3>
+            <span class="text-xs text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <div class="text-xs text-gray-600 mt-3 leading-relaxed border-t border-gray-50 pt-3 space-y-2">
+            <p><strong data-i18n="theory1_label">Teoría 1 (Origen Portugués - 1830):</strong> <span data-i18n="theory1_desc"></span></p>
+            <p><strong data-i18n="theory2_label">Teoría 2 (La Coima):</strong> <span data-i18n="theory2_desc"></span></p>
+          </div>
+        </details>
+
+        <details class="bg-white border border-gray-100 rounded-2xl p-4 group shadow-sm [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between cursor-pointer focus:outline-none">
+            <h3 class="font-bold text-sm text-gray-800 flex items-center gap-2">
+              <span>🧵</span> <span data-i18n="myth5_title">San Miguel y el Diablo de Trapo</span>
+            </h3>
+            <span class="text-xs text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <p class="text-xs text-gray-600 mt-3 leading-relaxed border-t border-gray-50 pt-3" data-i18n="myth5_desc"></p>
+        </details>
+      </div>
+      
+      <!-- Personaje Ilustre -->
+      <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-4 flex gap-3 items-center">
+        <span class="text-3xl" aria-hidden="true">🎸</span>
+        <div>
+          <h4 class="font-bold text-gray-800 text-xs">Rafael Amaranto (1935)</h4>
+          <p class="text-[11px] text-gray-600 leading-relaxed" data-i18n="illustrious_desc"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANTALLA 6: LIMI (ASISTENTE VIRTUAL OFFLINE/ONLINE) -->
+    <section id="limi" class="app-screen p-4 flex flex-col h-full hidden">
+      <div class="bg-white rounded-2xl p-3 border border-gray-100 shadow-sm flex items-center gap-3 mb-3">
+        <div class="bg-emerald-50 h-10 w-10 rounded-xl flex items-center justify-center text-xl" aria-hidden="true">🤖</div>
+        <div>
+          <h2 class="font-display font-extrabold text-sm text-gray-800 flex items-center gap-1.5">
+            Limi: <span data-i18n="limi_title">Guía Virtual</span>
+            <span class="bg-emerald-100 text-emerald-800 text-[8px] font-black px-1.5 py-0.5 rounded uppercase">Offline AI</span>
+          </h2>
+          <p class="text-[10px] text-gray-400 font-semibold uppercase tracking-wider" data-i18n="limi_status">Listo en todo momento</p>
+        </div>
+      </div>
+
+      <!-- Burbujas Rápidas de Preguntas Frecuentes -->
+      <div id="quick-queries" class="flex flex-wrap gap-1.5 mb-3"></div>
+
+      <!-- Caja de Conversación -->
+      <div id="limi-chat-box" class="flex-1 bg-white border border-gray-100 rounded-3xl p-4 overflow-y-auto min-h-[250px] max-h-[350px] shadow-inner space-y-3" aria-live="polite"></div>
+
+      <!-- Barra de Input -->
+      <div class="flex gap-2 mt-3">
+        <input id="limi-input" type="text" class="flex-1 bg-white border border-gray-100 rounded-2xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm text-gray-800" data-i18n-placeholder="limi_placeholder">
+        <button id="limi-send-btn" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-5 rounded-2xl transition shadow-md flex items-center justify-center focus:ring-2 focus:ring-emerald-500" data-i18n-aria="limi_send_aria">
+          ➔
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BARRA DE NAVEGACIÓN INFERIOR PERSISTENTE PARA MOVIL (ACCESIBLE) -->
+  <nav class="bg-white border-t border-gray-100 fixed bottom-0 left-0 right-0 py-2.5 px-2 z-40 shadow-lg" role="navigation" aria-label="Navegación principal">
+    <div class="max-w-md mx-auto grid grid-cols-5 text-center items-center">
+      
+      <!-- Inicio -->
+      <button data-tab="inicio" class="flex flex-col items-center gap-1 text-emerald-600 border-t-2 border-emerald-600 font-semibold focus:outline-none focus:text-emerald-700 transition" data-i18n-aria="tab_home_aria">
+        <span class="text-lg" aria-hidden="true">🏠</span>
+        <span class="text-[9px]" data-i18n="tab_home">Inicio</span>
+      </button>
+      
+      <!-- Explora -->
+      <button data-tab="explora" class="flex flex-col items-center gap-1 text-gray-500 hover:text-emerald-600 focus:outline-none transition" data-i18n-aria="tab_explore_aria">
+        <span class="text-lg" aria-hidden="true">⛰️</span>
+        <span class="text-[9px]" data-i18n="tab_explore">Explora</span>
+      </button>
+      
+      <!-- Servicios -->
+      <button data-tab="servicios" class="flex flex-col items-center gap-1 text-gray-500 hover:text-emerald-600 focus:outline-none transition" data-i18n-aria="tab_services_aria">
+        <span class="text-lg" aria-hidden="true">🏨</span>
+        <span class="text-[9px]" data-i18n="tab_services">Servicios</span>
+      </button>
+      
+      <!-- Mercado -->
+      <button data-tab="mercado" class="flex flex-col items-center gap-1 text-gray-500 hover:text-emerald-600 focus:outline-none transition" data-i18n-aria="tab_shop_aria">
+        <span class="text-lg" aria-hidden="true">🛒</span>
+        <span class="text-[9px]" data-i18n="tab_shop">Tienda</span>
+      </button>
+      
+      <!-- Limi (Chat) -->
+      <button data-tab="limi" class="flex flex-col items-center gap-1 text-gray-500 hover:text-emerald-600 focus:outline-none transition" data-i18n-aria="tab_limi_aria">
+        <span class="text-lg" aria-hidden="true">🤖</span>
+        <span class="text-[9px]" data-i18n="tab_limi">Limi Chat</span>
+      </button>
+      
+    </div>
+  </nav>
+
+  <!-- BOTÓN FLOTANTE DE LEYENDAS (ACCESIBLE) -->
+  <div class="fixed right-4 bottom-16 z-30">
+    <button data-tab="cultura" class="bg-gray-800 hover:bg-gray-900 text-white rounded-full p-3.5 shadow-xl transition flex items-center justify-center focus:ring-2 focus:ring-gray-600 focus:outline-none" data-i18n-aria="float_culture_aria">
+      📖
+    </button>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

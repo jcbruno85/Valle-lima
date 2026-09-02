@@ -1,0 +1,282 @@
+{
+  "es": {
+    "attractions": [
+      {
+        "id": "att_01",
+        "name": "Machu Picchu Coinino",
+        "category": "Aventura y Paisaje",
+        "sector": "Mollepata",
+        "altitude_meters": 2100,
+        "difficulty": "Bajo-Moderado",
+        "description": "Formaciones de piedra imponentes en lo alto de las montañas que se asemejan al famoso santuario incaico, ofreciendo vistas espectaculares del valle de Coina y el río Alto Chicama.",
+        "accessibility": "Caminata de 30 minutos desde el cementerio de Coina."
+      },
+      {
+        "id": "att_02",
+        "name": "Mirador de Coina",
+        "category": "Paisaje",
+        "sector": "Coina Centro",
+        "altitude_meters": 2000,
+        "difficulty": "Muy Bajo",
+        "description": "Ubicado en la parte alta donde antes se situaba la antena de TV. Permite contemplar por completo la población y la campiña de Coina, destacando todos sus sectores.",
+        "accessibility": "Acceso caminando o en vehículo ligero desde el centro."
+      },
+      {
+        "id": "att_03",
+        "name": "Río Alto Chicama (Río Grande)",
+        "category": "Naturaleza",
+        "sector": "La Fundición / Río Grande",
+        "altitude_meters": 1850,
+        "difficulty": "Bajo",
+        "description": "Río de aguas cristalinas que decora el paisaje del valle. Históricamente ha sido punto de esparcimiento para lavar ropa, frazadas y mote, y un refrescante lugar de baño.",
+        "accessibility": "Caminata corta descendiendo desde el sector La Fundición."
+      },
+      {
+        "id": "att_04",
+        "name": "Estadio Municipal de Coina",
+        "category": "Recreación",
+        "sector": "Coina Centro",
+        "altitude_meters": 1940,
+        "difficulty": "Muy Bajo",
+        "description": "Recinto deportivo recientemente mejorado que cuenta con una moderna cobertura metálica techada para proteger a las familias del intenso sol o de lluvias pasajeras.",
+        "accessibility": "Ubicado a pocas cuadras de la plaza principal."
+      },
+      {
+        "id": "att_05",
+        "name": "Casa Campestre Luna Park",
+        "category": "Espacio Campestre",
+        "sector": "Coina Periferia",
+        "altitude_meters": 1950,
+        "difficulty": "Muy Bajo",
+        "description": "Sitio recreativo familiar con piscinas refrescantes, canchas de fútbol para jugar al aire libre, restaurante campestre y maravillosas vistas panorámicas.",
+        "accessibility": "Fácil acceso peatonal o vehicular."
+      },
+      {
+        "id": "att_06",
+        "name": "La Hostería Coina",
+        "category": "Espacio Campestre",
+        "sector": "Coina Centro",
+        "altitude_meters": 1942,
+        "difficulty": "Muy Bajo",
+        "description": "Histórica propiedad de la familia del médico alemán Dr. Oswaldo Kauffman, rodeada de naturaleza con piscinas, juegos rústicos y mesas de madera.",
+        "accessibility": "Ubicada muy cerca del Puesto de Salud de Coina."
+      }
+    ],
+    "accommodations": [
+      {
+        "id": "hosp_01",
+        "name": "Hospedaje La Huaca",
+        "type": "Hospedaje Familiar",
+        "rating_avg": 4.8,
+        "price_per_night_pen": 45,
+        "description": "Descanso tranquilo en un ambiente familiar y rústico con precios muy accesibles.",
+        "amenities": [
+          "Baño privado",
+          "Agua caliente",
+          "Wi-Fi rural",
+          "Atención personalizada"
+        ],
+        "contact": "+51 947 852 963"
+      },
+      {
+        "id": "hosp_02",
+        "name": "Hotel Rossy",
+        "type": "Hotel",
+        "rating_avg": 4.5,
+        "price_per_night_pen": 60,
+        "description": "Cómodo y seguro, ideal para familias y viajeros que buscan confort en el centro del pueblo.",
+        "amenities": [
+          "TV Satelital",
+          "Baño privado",
+          "Vista a la campiña",
+          "Seguridad"
+        ],
+        "contact": "+51 999 888 777"
+      }
+    ],
+    "restaurants": [
+      {
+        "id": "rest_01",
+        "name": "Recreo Doña Mili",
+        "specialty": "Comida típica andina",
+        "rating": 4.9,
+        "address": "Frente a la Plaza de Coina",
+        "featured_dish": "Cuy frito crocante y chancho frito"
+      },
+      {
+        "id": "rest_02",
+        "name": "Pizzería Delicia",
+        "specialty": "Pizzas artesanales",
+        "rating": 4.7,
+        "address": "A un costado de la Iglesia San Miguel",
+        "featured_dish": "Pizza de masa artesanal con hierbas andinas"
+      }
+    ],
+    "products": [
+      {
+        "id": "prod_01",
+        "name": "Limas Dulces de Coina",
+        "unit": "Caja (5 kg)",
+        "price_pen": 25,
+        "description": "Limas recolectadas directamente de los huertos familiares de Coina, la Capital de la Lima Dulce. Cítrico aromático, rico en Vitamina C y bajo en acidez.",
+        "stock": 40
+      },
+      {
+        "id": "prod_02",
+        "name": "Mermelada de Lima Dulce",
+        "unit": "Frasco (300g)",
+        "price_pen": 10,
+        "description": "Elaborada artesanalmente por agricultores locales con limas seleccionadas y endulzada de forma natural.",
+        "stock": 100
+      },
+      {
+        "id": "prod_03",
+        "name": "Vino de Lima Dulce",
+        "unit": "Botella (750ml)",
+        "price_pen": 28,
+        "description": "Bebida fermentada única con el aroma sutil y dulce de nuestra fruta bandera. Un deleite para ocasiones especiales.",
+        "stock": 30
+      }
+    ]
+  },
+  "en": {
+    "attractions": [
+      {
+        "id": "att_01",
+        "name": "Machu Picchu of Coina",
+        "category": "Adventure & Landscape",
+        "sector": "Mollepata",
+        "altitude_meters": 2100,
+        "difficulty": "Low-Moderate",
+        "description": "Imposing stone formations high in the mountains that resemble the famous Inca sanctuary, offering spectacular views of the Coina valley and the Alto Chicama River.",
+        "accessibility": "A 30-minute walk from the Coina cemetery."
+      },
+      {
+        "id": "att_02",
+        "name": "Coina Viewpoint",
+        "category": "Landscape",
+        "sector": "Central Coina",
+        "altitude_meters": 2000,
+        "difficulty": "Very Low",
+        "description": "Located on the upper part where the old TV antenna was situated. It allows a complete view of the town and countryside of Coina, highlighting all its sectors.",
+        "accessibility": "Accessible by walking or light vehicle from the town center."
+      },
+      {
+        "id": "att_03",
+        "name": "Alto Chicama River (Río Grande)",
+        "category": "Nature",
+        "sector": "La Fundición / Río Grande",
+        "altitude_meters": 1850,
+        "difficulty": "Low",
+        "description": "Crystal clear river that decorates the valley's landscape. Historically, it has been a recreational spot to wash clothes, blankets, and hominy (mote), and a refreshing swimming spot.",
+        "accessibility": "Short downhill walk from La Fundición sector."
+      },
+      {
+        "id": "att_04",
+        "name": "Coina Municipal Stadium",
+        "category": "Recreation",
+        "sector": "Central Coina",
+        "altitude_meters": 1940,
+        "difficulty": "Very Low",
+        "description": "Recently improved sports facility featuring a modern metal roof to protect families from intense sun or passing rain.",
+        "accessibility": "Located a few blocks from the main square."
+      },
+      {
+        "id": "att_05",
+        "name": "Luna Park Country House",
+        "category": "Country Estate",
+        "sector": "Coina Outskirts",
+        "altitude_meters": 1950,
+        "difficulty": "Very Low",
+        "description": "Family recreational site with refreshing pools, open-air football fields, a country restaurant, and wonderful panoramic views.",
+        "accessibility": "Easy pedestrian or vehicle access."
+      },
+      {
+        "id": "att_06",
+        "name": "The Coina Country Guesthouse (La Hostería)",
+        "category": "Country Estate",
+        "sector": "Central Coina",
+        "altitude_meters": 1942,
+        "difficulty": "Very Low",
+        "description": "Historic property belonging to the family of the German physician Dr. Oswaldo Kauffman, surrounded by nature with swimming pools, rustic games, and wooden tables.",
+        "accessibility": "Located very close to the Coina Health Post."
+      }
+    ],
+    "accommodations": [
+      {
+        "id": "hosp_01",
+        "name": "La Huaca Guesthouse",
+        "type": "Family Guesthouse",
+        "rating_avg": 4.8,
+        "price_per_night_pen": 45,
+        "description": "Tranquil rest in a family and rustic atmosphere with highly affordable prices.",
+        "amenities": [
+          "Private bathroom",
+          "Hot water",
+          "Rural Wi-Fi",
+          "Personalized attention"
+        ],
+        "contact": "+51 947 852 963"
+      },
+      {
+        "id": "hosp_02",
+        "name": "Rossy Hotel",
+        "type": "Hotel",
+        "rating_avg": 4.5,
+        "price_per_night_pen": 60,
+        "description": "Comfortable and secure, ideal for families and travelers seeking comfort in the center of town.",
+        "amenities": [
+          "Satellite TV",
+          "Private bathroom",
+          "Countryside view",
+          "Security"
+        ],
+        "contact": "+51 999 888 777"
+      }
+    ],
+    "restaurants": [
+      {
+        "id": "rest_01",
+        "name": "Dona Mili Country Restaurant",
+        "specialty": "Traditional Andean Food",
+        "rating": 4.9,
+        "address": "In front of the Coina Main Square",
+        "featured_dish": "Crispy fried guinea pig and deep-fried pork"
+      },
+      {
+        "id": "rest_02",
+        "name": "Delicia Pizzeria",
+        "specialty": "Artisanal Pizzas",
+        "rating": 4.7,
+        "address": "Next to the San Miguel Church",
+        "featured_dish": "Artisanal crust pizza with Andean herbs"
+      }
+    ],
+    "products": [
+      {
+        "id": "prod_01",
+        "name": "Coina Sweet Limes",
+        "unit": "Box (5 kg)",
+        "price_pen": 25,
+        "description": "Limes harvested directly from Coina's family orchards, the Capital of the Sweet Lime. Aromatic citrus, rich in Vitamin C and low in acidity.",
+        "stock": 40
+      },
+      {
+        "id": "prod_02",
+        "name": "Sweet Lime Jam",
+        "unit": "Jar (300g)",
+        "price_pen": 10,
+        "description": "Handcrafted by local farmers with selected sweet limes and naturally sweetened.",
+        "stock": 100
+      },
+      {
+        "id": "prod_03",
+        "name": "Sweet Lime Wine",
+        "unit": "Bottle (750ml)",
+        "price_pen": 28,
+        "description": "Unique fermented beverage with the subtle and sweet aroma of our flagship fruit. A delight for special occasions.",
+        "stock": 30
+      }
+    ]
+  }
+}
