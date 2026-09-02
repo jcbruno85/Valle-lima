@@ -336,6 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadData();
   renderCart();
   setupLimi();
+  initPassport(); // <-- Inicializa el Pasaporte Digital y lee los códigos QR Offline
 
   // Escuchar cambios de conectividad
   window.addEventListener('online', handleOnline);
