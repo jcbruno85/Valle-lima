@@ -11,6 +11,12 @@ let currentLanguage = localStorage.getItem('coina_lang') || 'es';
 const translations = {
   "es": {
     "app_title": "COINA: SABOREA Y VIVE",
+    "passport_title": "Pasaporte de Cosecha",
+    "passport_subtitle": "Colecciona Sellos Offline",
+    "passport_desc": "Escanea los códigos QR físicos en los huertos de limas, hospedajes y recreos de Coina para coleccionar sellos. ¡Completa tu pasaporte y reclama tu premio en la tienda!",
+    "toast_stamp_earned": "¡Felicidades! Has ganado un nuevo sello de cosecha: ",
+    "toast_passport_complete": "¡Espectacular! Has completado tu pasaporte. Reclama tu mermelada de lima dulce gratis en el centro del pueblo.",
+
     "app_subtitle": "Paraíso del Alto Chicama",
     "hero_badge": "Clima de Sanatorio Natural",
     "hero_title": "¡Respira de nuevo en Coina!",
@@ -99,6 +105,12 @@ const translations = {
   },
   "en": {
     "app_title": "COINA: TASTE AND LIVE",
+    "passport_title": "Harvest Passport",
+    "passport_subtitle": "Collect Offline Stamps",
+    "passport_desc": "Scan physical QR codes at lime orchards, guesthouses, and eateries in Coina to collect digital stamps. Complete your passport and claim your prize!",
+    "toast_stamp_earned": "Congratulations! You earned a new harvest stamp: ",
+    "toast_passport_complete": "Spectacular! You have completed your passport. Claim your free sweet lime jam in the town center.",
+
     "app_subtitle": "Alto Chicama Paradise",
     "hero_badge": "Natural Sanatorium Climate",
     "hero_title": "Breathe again in Coina!",
@@ -229,6 +241,93 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+
+// ==========================================
+// SECCIÓN DEL PASAPORTE DIGITAL DE COSECHA (GAMIFICACIÓN OFFLINE)
+// ==========================================
+let collectedStamps = JSON.parse(localStorage.getItem('coina_stamps')) || [];
+
+// Lista de sellos válidos
+const validStamps = {
+  "limas": { es: "Huerto de Limas Dulces", en: "Sweet Lime Orchards", icon: "🍋" },
+  "huaca": { es: "Hospedaje La Huaca", en: "La Huaca Guesthouse", icon: "🏠" },
+  "mili": { es: "Recreo Doña Mili", en: "Dona Mili Restaurant", icon: "🍲" },
+  "machu": { es: "Machu Picchu Coinino", en: "Machu Picchu of Coina", icon: "⛰️" },
+  "taller": { es: "Taller de Vinos Artesanales", en: "Artisanal Wine Workshop", icon: "🍷" }
+};
+
+function initPassport() {
+  checkUrlForStamps();
+  renderStamps();
+}
+
+function checkUrlForStamps() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const stampParam = urlParams.get('sello') || urlParams.get('stamp');
+  
+  if (stampParam && validStamps[stampParam]) {
+    if (!collectedStamps.includes(stampParam)) {
+      collectedStamps.push(stampParam);
+      localStorage.setItem('coina_stamps', JSON.stringify(collectedStamps));
+      
+      const stampName = validStamps[stampParam][currentLanguage];
+      const stampIcon = validStamps[stampParam].icon;
+      
+      // Mostrar notificación de logro
+      showToast(`${translations[currentLanguage]["toast_stamp_earned"]} ${stampIcon} ${stampName}!`);
+      
+      // Limi felicita de viva voz (Accesibilidad)
+      setTimeout(() => {
+        const congratsMsg = currentLanguage === 'es'
+          ? `¡Excelente viajero! Has desbloqueado el sello del ${stampName}. ¡Sigue explorando el Paraíso del Alto Chicama!`
+          : `Excellent traveler! You have unlocked the ${stampName} stamp. Keep exploring the Alto Chicama Paradise!`;
+        speakLimi(congratsMsg);
+      }, 1500);
+      
+      // Verificar si completó todos
+      if (collectedStamps.length === Object.keys(validStamps).length) {
+        setTimeout(() => {
+          showToast(translations[currentLanguage]["toast_passport_complete"]);
+          speakLimi(translations[currentLanguage]["toast_passport_complete"]);
+        }, 5000);
+      }
+    }
+    
+    // Limpiar los parámetros de la URL de forma elegante sin recargar la página (Offline-safe)
+    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+    window.history.replaceState({ path: newUrl }, '', newUrl);
+  }
+}
+
+function renderStamps() {
+  // Resetear estados visuales
+  Object.keys(validStamps).forEach(key => {
+    const stampEl = document.getElementById(`stamp-${key}`);
+    if (stampEl) {
+      if (collectedStamps.includes(key)) {
+        stampEl.classList.remove('opacity-30', 'grayscale');
+        stampEl.classList.add('opacity-100', 'scale-110');
+      } else {
+        stampEl.classList.add('opacity-30', 'grayscale');
+        stampEl.classList.remove('opacity-100', 'scale-110');
+      }
+    }
+  });
+
+  // Actualizar el Badge contador
+  const badge = document.getElementById('passport-badge');
+  if (badge) {
+    const total = Object.keys(validStamps).length;
+    badge.textContent = `${collectedStamps.length} / ${total} ${currentLanguage === 'es' ? 'Sellos' : 'Stamps'}`;
+    if (collectedStamps.length === total) {
+      badge.className = "bg-yellow-100 text-yellow-800 text-[10px] font-black px-2.5 py-1 rounded-full border border-yellow-300 uppercase tracking-wide animate-pulse";
+      badge.textContent = currentLanguage === 'es' ? "🏆 ¡Completado!" : "🏆 Completed!";
+    } else {
+      badge.className = "bg-emerald-50 text-emerald-800 text-[10px] font-black px-2.5 py-1 rounded-full border border-emerald-100 uppercase tracking-wide";
+    }
+  }
+}
+
 // Inicialización de la aplicación
 document.addEventListener('DOMContentLoaded', () => {
   setupNavigation();
@@ -253,6 +352,7 @@ window.setLanguage = function(lang) {
   renderProducts();
   setupLimiWelcome();
   renderLimiQuickQueries();
+  renderStamps();
 }
 
 // Aplicar traducciones a los elementos DOM con atributo data-i18n
