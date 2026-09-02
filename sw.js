@@ -1,4 +1,4 @@
-const CACHE_NAME = 'coina-cache-v2';
+const CACHE_NAME = 'coina-cache-v3';
 const urlsToCache = [
   './',
   './index.html',
@@ -11,10 +11,11 @@ const urlsToCache = [
 
 // Instalación del Service Worker
 self.addEventListener('install', event => {
+  self.skipWaiting(); // Fuerza al Service Worker entrante a activarse inmediatamente
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Abriendo caché de la Web App Coina v2...');
+        console.log('Abriendo caché de la Web App Coina v3...');
         return cache.addAll(urlsToCache);
       })
   );
@@ -22,51 +23,47 @@ self.addEventListener('install', event => {
 
 // Activación y limpieza de cachés antiguas
 self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            console.log('Eliminando caché antigua:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
+    self.clients.claim().then(() => { // Permite que controle las páginas abiertas de inmediato
+      const cacheWhitelist = [CACHE_NAME];
+      return caches.keys().then(cacheNames => {
+        return Promise.all(
+          cacheNames.map(cacheName => {
+            if (cacheWhitelist.indexOf(cacheName) === -1) {
+              console.log('Eliminando caché antigua:', cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      });
     })
   );
 });
 
-// Interceptación de peticiones de red para servir desde caché (Offline First)
+// Estrategia NETWORK-FIRST con Fallback a CACHÉ (Ideal para desarrollo y actualizaciones rápidas en celulares)
 self.addEventListener('fetch', event => {
+  // Solo procesar peticiones GET internas o CDNs conocidos
+  if (event.request.method !== 'GET') return;
+  
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then(response => {
-        // Retornar recurso cacheado
-        if (response) {
-          return response;
+        // Si la respuesta de red es correcta (status 200), la clonamos y guardamos en caché
+        if (response && response.status === 200) {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseToCache);
+          });
         }
-        
-        // Si no está en caché, intentar red
-        return fetch(event.request).then(
-          response => {
-            // Verificar respuesta válida
-            if(!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-
-            // Clonar respuesta para guardar en caché
-            var responseToCache = response.clone();
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(event.request, responseToCache);
-              });
-
-            return response;
+        return response;
+      })
+      .catch(() => {
+        // FALLBACK: Si no hay señal o falla la red, servimos directamente desde la caché local
+        return caches.match(event.request).then(cachedResponse => {
+          if (cachedResponse) {
+            return cachedResponse;
           }
-        ).catch(() => {
-          // Si falla red y no hay caché, retornar mensaje vacío o fallback
-          console.log('Petición fallida en modo desconectado para:', event.request.url);
+          console.warn('Petición fallida sin conexión y sin caché para:', event.request.url);
         });
       })
   );
