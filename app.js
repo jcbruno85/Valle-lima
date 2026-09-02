@@ -304,6 +304,7 @@ function checkConnectionStatus() {
   } else {
     statusIndicator.innerHTML = '<span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span><span class="text-[10px] text-amber-700 font-bold ml-1.5 uppercase tracking-wide">' + (currentLanguage === 'es' ? 'Offline' : 'Offline') + '</span>';
   }
+  updateLimiBadge();
 }
 
 function handleOnline() {
@@ -564,6 +565,56 @@ function setupLimi() {
       if (e.key === 'Enter') handleLimiSend();
     };
   }
+  
+  // Agregar botón de configuración (engranaje) dinámicamente al h2 de Limi para mantener accesibilidad y no alterar HTML
+  const limiHeader = document.querySelector('#limi h2');
+  if (limiHeader && !document.getElementById('btn-config-ia')) {
+    const gearBtn = document.createElement('button');
+    gearBtn.id = 'btn-config-ia';
+    gearBtn.className = 'ml-1.5 text-gray-400 hover:text-emerald-700 transition focus:outline-none focus:ring-1 focus:ring-emerald-500 rounded p-0.5';
+    gearBtn.innerHTML = '⚙️';
+    gearBtn.title = currentLanguage === 'es' ? "Configurar IA Online" : "Configure Online AI";
+    gearBtn.onclick = () => configureApiKey();
+    limiHeader.appendChild(gearBtn);
+  }
+  
+  updateLimiBadge();
+}
+
+// Configurar API Key de Gemini de manera segura y local (sin exponerla en GitHub)
+window.configureApiKey = function() {
+  const currentKey = localStorage.getItem('coina_gemini_key') || '';
+  const promptMessage = currentLanguage === 'es'
+    ? "Ingresa tu API Key de Google Gemini para activar respuestas dinámicas inteligentes (Modo Online):\n\n(Deja vacío para desactivar y usar solo el Modo Offline)"
+    : "Enter your Google Gemini API Key to enable dynamic smart answers (Online Mode):\n\n(Leave blank to disable and use Offline Mode only)";
+    
+  const newKey = prompt(promptMessage, currentKey);
+  if (newKey !== null) {
+    const trimmedKey = newKey.trim();
+    if (trimmedKey) {
+      localStorage.setItem('coina_gemini_key', trimmedKey);
+      showToast(currentLanguage === 'es' ? "¡IA Online activada con éxito! 🚀" : "Online AI successfully enabled! 🚀");
+    } else {
+      localStorage.removeItem('coina_gemini_key');
+      showToast(currentLanguage === 'es' ? "Modo Offline restablecido" : "Offline Mode restored");
+    }
+    updateLimiBadge();
+  }
+}
+
+// Actualizar visualmente el estado del asistente (Offline AI / Online AI)
+window.updateLimiBadge = function() {
+  const badge = document.querySelector('#limi h2 span');
+  const hasKey = !!localStorage.getItem('coina_gemini_key');
+  if (badge) {
+    if (navigator.onLine && hasKey) {
+      badge.className = "bg-blue-100 text-blue-800 text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wide";
+      badge.textContent = "Online AI";
+    } else {
+      badge.className = "bg-emerald-100 text-emerald-800 text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wide";
+      badge.textContent = "Offline AI";
+    }
+  }
 }
 
 function setupLimiWelcome() {
@@ -620,7 +671,7 @@ window.sendQuickQuery = function(key, label) {
   }, 700);
 }
 
-function handleLimiSend() {
+async function handleLimiSend() {
   const inputEl = document.getElementById('limi-input');
   const text = inputEl.value.trim();
   if (!text) return;
@@ -629,10 +680,56 @@ function handleLimiSend() {
   inputEl.value = '';
   showTypingIndicator();
   
+  const cleanQuery = text.toLowerCase();
+  
+  // 1. INTENTO DE MODO ONLINE (Si hay internet y se configuró una API Key de Gemini de Google)
+  const apiKey = localStorage.getItem('coina_gemini_key');
+  if (navigator.onLine && apiKey) {
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: `Eres "Limi", el carismático asistente virtual de turismo del pueblo de Coina (Otuzco, La Libertad, Perú). 
+              Estás respondiendo de manera ONLINE en tiempo real utilizando Inteligencia Artificial.
+              Idioma seleccionado del usuario: ${currentLanguage}.
+              Usa los siguientes datos verdaderos de Coina para responder con precisión y sin inventar datos falsos:
+              - Altitud: 1942 msnm. Clima seco, soleado y medicinal (sanatorio natural promovido históricamente por el Dr. Oswaldo Kauffman).
+              - Coina es la Capital de la Lima Dulce (Ordenanza Regional). Produce 7,500 toneladas anuales en sus 46 hectáreas de cultivos.
+              - Atractivos: El "Machu Picchu Coinino" (en Mollepata), El Mirador de Coina, Río Alto Chicama (Río Grande), Recreo Luna Park, La Casa Blanca, La Hostería (junto al puesto de salud), Estadio Municipal techado.
+              - Servicios: Hospedaje La Huaca (S/ 45/noche), Hotel Rossy (con TV), Recreo Doña Mili (cuy frito, chancho crujiente), Pizzería Delicia (pizzas artesanales).
+              - Transporte: Latino Express y Huaca Express desde Trujillo (4-5 horas). Combi del Sr. José Ponce desde Otuzco (lunes, miércoles y viernes a las 11:00 AM).
+              - Cultura/Leyendas: Las Aves de La Fundición (tres mujeres mágicas), la Laguna Encantadora de Inea (en Cerripampa), el niño fantasma del río Chugual, San Miguel Arcángel (Don Miguel Sánchez le cosió una cola de trapo al diablo del patrón).
+              
+              Pregunta del usuario: "${text}".
+              Responde de forma breve, amigable, usando emojis de lima 🍋 o montaña ⛰️ y manteniéndote siempre en el rol de Limi.`
+            }]
+          }]
+        })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        const reply = data.candidates[0].content.parts[0].text;
+        removeTypingIndicator();
+        addChatMessage(reply, false);
+        return; // Salto exitoso, no requerimos fallback offline
+      } else {
+        console.warn("Fallo en la llamada a la API de Gemini, utilizando fallback offline...");
+      }
+    } catch (err) {
+      console.error("Error al conectar con Gemini:", err);
+    }
+  }
+
+  // 2. MODO OFFLINE (Respaldo local por expresiones regulares)
   setTimeout(() => {
     removeTypingIndicator();
     let reply = "";
-    const cleanQuery = text.toLowerCase();
     
     if (cleanQuery.includes('lima') || cleanQuery.includes('lime')) {
       reply = limiBrain[currentLanguage]["lima"];
@@ -652,8 +749,8 @@ function handleLimiSend() {
       reply = limiBrain[currentLanguage]["dormir"];
     } else {
       reply = currentLanguage === 'es' 
-        ? "Interesante pregunta sobre Coina. En modo sin conexión, puedo guiarte con las opciones preestablecidas de transporte, alojamiento, comida típica, clima y leyendas. ¡Por favor selecciona alguna de ellas!"
-        : "Interesting question about Coina. In offline mode, I can help you with preset options for transport, lodging, typical food, weather, and legends. Please select one of them!";
+        ? "Interesante pregunta sobre Coina. En modo sin conexión, puedo guiarte con las opciones preestablecidas de transporte, alojamiento, comida típica, clima y leyendas. ¡Por favor selecciona alguna de ellas o configura mi IA con conexión pulsando el engranaje ⚙️!"
+        : "Interesting question about Coina. In offline mode, I can help you with preset options for transport, lodging, typical food, weather, and legends. Please select one of them or configure my Online AI using the gear ⚙️ icon!";
     }
     
     addChatMessage(reply, false);
